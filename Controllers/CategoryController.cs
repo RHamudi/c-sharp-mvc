@@ -82,5 +82,39 @@ namespace c_sharp_mvc.Controllers
             }
             return View(obj);
         }
+
+        public IActionResult Remove(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var categoryFromDb = _db.Categories.Find(id);
+
+            if (categoryFromDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(categoryFromDb);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult RemovePOST(int? id)
+        {
+            var FindDb = _db.Categories.Find(id);
+            if (FindDb == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _db.Categories.Remove(FindDb);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+        }
     }
 }
